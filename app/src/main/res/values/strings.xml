@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Quote House</string>
+    <string name="title_activity_quote_details">QuoteHouse</string>
+    <string name="title_activity_test">Test Activity</string>
 </resources>

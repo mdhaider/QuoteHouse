@@ -3,6 +3,8 @@ package com.nehal.quotehouse.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Text
@@ -21,6 +23,7 @@ import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -35,11 +38,10 @@ import com.nehal.quotehouse.data.preference.PrefsManager
 import com.nehal.quotehouse.data.preference.UiMode
 import com.nehal.quotehouse.model.Quote
 import com.nehal.quotehouse.ui.JetQuotesTheme
+import com.nehal.quotehouse.viewModel.PostViewModel
 
 
 class QuotesActivity : AppCompatActivity() {
-
-
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +103,8 @@ class QuotesActivity : AppCompatActivity() {
 @Composable
 fun getQuotes(): List<Quote>? {
     val context = ContextAmbient.current
+     lateinit var postViewModel: PostViewModel
+     lateinit var recyclerView: RecyclerView
     val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
@@ -108,6 +112,20 @@ fun getQuotes(): List<Quote>? {
     val listType = Types.newParameterizedType(List::class.java, Quote::class.java)
     val adapter: JsonAdapter<List<Quote>> = moshi.adapter(listType)
     val myJson = context.assets.open("quotes.json").bufferedReader().use { it.readText() }
+
+
+    val data: MutableMap<String, String> = HashMap()
+    data["count"] = "1"
+    data["limit"] = "30"
+    data["order"] = "quoteText"
+
+   /* postViewModel.getPost(data)
+    postViewModel.postData.observe(requireActivity(), Observer {
+        Log.d(TAG, "onCreate: ${it[0].question}")
+        postAdapter.setPostData(it as ArrayList<Mcq>)
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    })*/
     return adapter.fromJson(myJson)
 }
 
@@ -117,7 +135,7 @@ fun App(toggleTheme: () -> Unit) {
         TopAppBar(
             title = {
                 Text(
-                    text = "JetQuotes",
+                    text = "QuoteHouse",
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )

@@ -16,7 +16,7 @@ enum class UiMode {
 
 class PrefsManager(context: Context) {
 
-    private val dataStore = context.createDataStore(name = "jet_quotes_prefs")
+    private val dataStore = context.createDataStore(name = "quote_house_prefs")
 
     val uiModeFlow: Flow<UiMode> = dataStore.data
         .catch {
